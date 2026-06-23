@@ -1,7 +1,7 @@
 # STATE
 
 - **Product:** Garage — a local used-car shortlist & compare dashboard (personal, single-user). Buying deadline: end of June 2026.
-- **Phase:** ✅ Built & verified. Runs locally (`cd app && npm run dev` → http://localhost:5178).
+- **Phase:** ✅ Built, verified, and pushed to GitHub (private `xzhou110/garage`, branch `main`). Runs locally (`cd app && npm run dev` → http://localhost:5178). Iterations 2 (rating/sold/sheet-sync) + 3 (sheet formatting, owner-type field, added 2024 XLE c3, seed-authoritative persistence) complete.
 - **Done:**
   - Vite/React/TS migration of the prototype complete. Pure engine ported verbatim + **155 unit tests pass**.
   - Full UI (grid, compare, detail, filters/sort, add/edit form, export, settings, theme) built and wired.
