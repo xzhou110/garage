@@ -96,7 +96,10 @@ export default function App() {
               <span className="stat-v num">{g.cars.length}</span>
               <span className="stat-l">Cars</span>
             </div>
-            <div className="stat">
+            <div
+              className="stat"
+              title="Cars you're actively pursuing — status Shortlist, Contacted, Test driven, or Negotiating. Excludes New, Rejected, Bought, and Sold."
+            >
               <span className="stat-v num">{inPlayCount(g.cars)}</span>
               <span className="stat-l">In play</span>
             </div>
