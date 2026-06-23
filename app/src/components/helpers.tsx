@@ -35,11 +35,6 @@ export const STATUS_BADGE: Record<Status, string> = {
   Sold: 'b-neutral',
 };
 
-const IN_PLAY: Status[] = ['Shortlist', 'Contacted', 'Test driven', 'Negotiating'];
-export function inPlayCount(cars: Car[]): number {
-  return cars.filter((c) => IN_PLAY.includes(c.status)).length;
-}
-
 /** Search + chip + panel filters (ported from applyFilters, garage.html:692). featState via lib. */
 export function applyFilters(cars: Car[], f: Filters): Car[] {
   const q = f.search.trim().toLowerCase();

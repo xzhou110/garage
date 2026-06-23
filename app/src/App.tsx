@@ -1,7 +1,7 @@
 import { useCallback, useMemo, useRef, useState } from 'react';
 import type { Car } from './types';
 import { useGarage } from './state/useGarage';
-import { applyFilters, applySort, inPlayCount } from './components/helpers';
+import { applyFilters, applySort } from './components/helpers';
 import { Filters } from './components/Filters';
 import { Grid } from './components/Grid';
 import { CompareTable } from './components/CompareTable';
@@ -95,13 +95,6 @@ export default function App() {
             <div className="stat">
               <span className="stat-v num">{g.cars.length}</span>
               <span className="stat-l">Cars</span>
-            </div>
-            <div
-              className="stat"
-              title="Cars you're actively pursuing — status Shortlist, Contacted, Test driven, or Negotiating. Excludes New, Rejected, Bought, and Sold."
-            >
-              <span className="stat-v num">{inPlayCount(g.cars)}</span>
-              <span className="stat-l">In play</span>
             </div>
             <div className="stat">
               <span className="stat-v num">{g.compareSet.size}</span>
