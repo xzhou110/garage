@@ -36,7 +36,7 @@ export interface Filters {
 
 export const DEFAULT_FILTERS: Filters = {
   search: '',
-  sort: 'added',
+  sort: 'year-desc',
   seller: 'all',
   cleanOnly: false,
   noAccident: false,

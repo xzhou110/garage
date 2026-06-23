@@ -131,10 +131,10 @@ describe('getFlags — accidents', () => {
     expect(hasLevel(flags, 'risk')).toBe(true);
   });
 
-  it('accidents === 1 → warn (not risk)', () => {
+  it('accidents === 1 → risk flag (any reported accident is red)', () => {
     const flags = getFlags(car({ accidents: 1 }), 2026);
-    expect(flagsOfLevel(flags, 'risk').filter((f) => f.t.includes('accident'))).toHaveLength(0);
-    expect(flagsOfLevel(flags, 'warn').some((f) => f.t.includes('1 accident'))).toBe(true);
+    expect(flagsOfLevel(flags, 'risk').some((f) => f.t.includes('1 accident'))).toBe(true);
+    expect(flagsOfLevel(flags, 'warn').filter((f) => f.t.includes('1 accident'))).toHaveLength(0);
   });
 
   it('accidents === null → warn (unknown history)', () => {

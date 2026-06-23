@@ -226,6 +226,34 @@ describe('sheetMatrix — derived columns', () => {
 });
 
 // ---------------------------------------------------------------------------
+// sheetMatrix — Owner type column (exports prior-use: Personal / Lease / Fleet / …)
+// ---------------------------------------------------------------------------
+describe('sheetMatrix — Owner type column', () => {
+  const ownerIdx = (sheetMatrix([car()])[0] as string[]).indexOf('Owner type');
+
+  it('"Owner type" column header exists', () => {
+    expect(ownerIdx).toBeGreaterThan(-1);
+  });
+
+  it('exports the ownerType value verbatim (Lease / Personal / Rental/Fleet)', () => {
+    expect(sheetMatrix([car({ ownerType: 'Lease' })])[1][ownerIdx]).toBe('Lease');
+    expect(sheetMatrix([car({ ownerType: 'Personal' })])[1][ownerIdx]).toBe('Personal');
+    expect(sheetMatrix([car({ ownerType: 'Rental/Fleet' })])[1][ownerIdx]).toBe('Rental/Fleet');
+  });
+
+  it('undefined ownerType → empty string (never the literal "undefined")', () => {
+    // base fixture leaves ownerType unset
+    expect(sheetMatrix([car()])[1][ownerIdx]).toBe('');
+  });
+
+  it('Owner type value survives CSV and TSV serialization', () => {
+    const c = car({ ownerType: 'Rental/Fleet' });
+    expect(toCSV([c])).toContain('Rental/Fleet');
+    expect(toTSV([c])).toContain('Rental/Fleet');
+  });
+});
+
+// ---------------------------------------------------------------------------
 // toCSV — RFC-4180 quoting
 // ---------------------------------------------------------------------------
 describe('toCSV', () => {

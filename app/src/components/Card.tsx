@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { ReactElement } from 'react';
-import type { Car } from '../types';
+import type { Car, OwnerType } from '../types';
 import { FEATURES } from '../data/features';
 import { carName, featCount, featState, miles, money } from '../lib/format';
 import { otd, totalFees } from '../lib/derive';
@@ -77,6 +77,33 @@ function SellerBadge({ car }: { car: Car }): ReactElement | null {
   if (!car.sellerType) return null;
   const cls = car.sellerType === 'CPO' ? 'b-good' : car.sellerType === 'Private' ? 'b-info' : 'b-neutral';
   return <span className={`badge ${cls}`}>{car.sellerType}</span>;
+}
+
+/**
+ * Prior-use / owner-type tag. Every OwnerType renders a badge (incl. Personal), so the
+ * card always states how the car was used. Tone follows risk: personal = reassuring (good),
+ * lease/government = informational, rental-fleet/commercial/unknown = caution (warn).
+ */
+const OWNER_BADGE: Record<OwnerType, { label: string; cls: string; tone: 'good' | 'warn' | 'plain' }> = {
+  Personal: { label: 'Personal use', cls: 'b-good', tone: 'good' },
+  Lease: { label: 'Lease return', cls: 'b-info', tone: 'plain' },
+  'Rental/Fleet': { label: 'Rental / fleet', cls: 'b-warn', tone: 'warn' },
+  Commercial: { label: 'Commercial use', cls: 'b-warn', tone: 'warn' },
+  Government: { label: 'Government', cls: 'b-info', tone: 'plain' },
+  Unknown: { label: 'Use: unknown', cls: 'b-warn', tone: 'warn' },
+};
+
+function OwnerBadge({ car }: { car: Car }): ReactElement | null {
+  if (!car.ownerType) return null;
+  const o = OWNER_BADGE[car.ownerType];
+  if (!o) return null;
+  return (
+    <span className={`badge ${o.cls}`}>
+      {o.tone === 'good' && <IconCheck />}
+      {o.tone === 'warn' && <IconWarn />}
+      {o.label}
+    </span>
+  );
 }
 
 export function Card({ car, inCompare, onToggleCompare, onOpen, onSetYou }: Props): ReactElement {
@@ -163,9 +190,7 @@ export function Card({ car, inCompare, onToggleCompare, onOpen, onSetYou }: Prop
           <TitleBadge car={car} />
           <AccidentBadge car={car} />
           <SellerBadge car={car} />
-          {car.ownerType && car.ownerType !== 'Personal' && car.ownerType !== 'Unknown' && (
-            <span className="badge b-warn">{car.ownerType}</span>
-          )}
+          <OwnerBadge car={car} />
         </div>
 
         {loc && (

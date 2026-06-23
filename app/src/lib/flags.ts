@@ -20,7 +20,7 @@ export function getFlags(c: Car, currentYear: number = new Date().getFullYear())
   if (c.accidents != null && c.accidents >= 2)
     f.push({ lvl: 'risk', t: `${c.accidents} accidents reported — check structural/frame and airbag history.` });
   else if (c.accidents === 1)
-    f.push({ lvl: 'warn', t: '1 accident reported — get severity and repair quality before a PPI.' });
+    f.push({ lvl: 'risk', t: '1 accident reported — get severity and repair quality before a PPI.' });
   else if (c.accidents == null)
     f.push({ lvl: 'warn', t: 'Accident history unknown — pull Carfax/AutoCheck.' });
 
