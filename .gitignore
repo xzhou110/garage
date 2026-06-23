@@ -1,0 +1,19 @@
+# dependencies
+app/node_modules/
+node_modules/
+
+# build output
+app/dist/
+dist/
+
+# editor / OS
+.DS_Store
+Thumbs.db
+*.log
+
+# local env
+.env
+.env.local
+
+# scratch
+app/scripts/_extract.mjs
