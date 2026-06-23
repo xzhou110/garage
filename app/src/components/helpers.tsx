@@ -40,7 +40,7 @@ export function applyFilters(cars: Car[], f: Filters): Car[] {
   const q = f.search.trim().toLowerCase();
   return cars.filter((c) => {
     if (q) {
-      const hay = `${c.year || ''} ${c.make || ''} ${c.model || ''} ${c.trim || ''} ${c.dealership || ''} ${
+      const hay = `${c.id || ''} ${c.year || ''} ${c.make || ''} ${c.model || ''} ${c.trim || ''} ${c.dealership || ''} ${
         c.location || ''
       } ${(c.features || []).join(' ')}`.toLowerCase();
       if (!hay.includes(q)) return false;

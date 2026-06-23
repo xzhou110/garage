@@ -129,6 +129,7 @@ export function Card({ car, inCompare, onToggleCompare, onOpen, onSetYou }: Prop
     >
       <div className="card-imgwrap">
         <ImageBlock car={car} />
+        <span className="card-id" title="Car ID (matches the data file & image)">{car.id}</span>
         {car.status && car.status !== 'New' && <span className="status-tag">{car.status}</span>}
         <div className="card-cmp" onClick={(e) => e.stopPropagation()}>
           <label className="cmp-box">
