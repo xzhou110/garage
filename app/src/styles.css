@@ -187,7 +187,9 @@ main { max-width: 1320px; margin: 0 auto; padding: 14px 22px 80px; }
 .card-body { padding: 14px 15px 15px; display: flex; flex-direction: column; gap: 11px; flex: 1; }
 .card-title { font-family: var(--display); font-weight: 700; font-size: 16.5px; letter-spacing: -.01em; line-height: 1.2; }
 .card-trim { font-size: 12.5px; color: var(--ink-3); font-weight: 500; margin-top: 1px; }
-.price-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.card-head { display: flex; align-items: baseline; justify-content: space-between; gap: 10px; }
+.card-miles { font-size: 12.5px; color: var(--ink-2); font-weight: 600; white-space: nowrap; flex: none; }
+.price-row { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; margin-top: -5px; }
 .price { font-family: var(--display); font-weight: 800; font-size: 23px; letter-spacing: -.02em; }
 .price-sub { font-size: 11.5px; color: var(--ink-3); font-weight: 600; text-align: right; }
 .price-extra { font-size: 11.5px; color: var(--ink-2); font-weight: 600; margin-top: -6px; display: flex; flex-wrap: wrap; gap: 3px 10px; }

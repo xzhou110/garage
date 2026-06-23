@@ -7,7 +7,7 @@ import { otd, totalFees } from '../lib/derive';
 import { getFlags, signalLevel } from '../lib/flags';
 import { assetUrl, flagIcon } from './helpers';
 import { RatingStars } from './RatingStars';
-import { IconCar, IconCheck, IconDrive, IconExt, IconFuel, IconGauge, IconPin, IconWarn } from './icons';
+import { IconCar, IconCheck, IconDrive, IconExt, IconFuel, IconPin, IconWarn } from './icons';
 
 interface Props {
   car: Car;
@@ -144,9 +144,12 @@ export function Card({ car, inCompare, onToggleCompare, onOpen, onSetYou }: Prop
       </div>
 
       <div className="card-body">
-        <div>
-          <div className="card-title">{carName(car)}</div>
-          {car.trim && <div className="card-trim">{car.trim}</div>}
+        <div className="card-head">
+          <div>
+            <div className="card-title">{carName(car)}</div>
+            {car.trim && <div className="card-trim">{car.trim}</div>}
+          </div>
+          <span className="card-miles num">{miles(car.mileage)}</span>
         </div>
 
         <div className="price-row">
@@ -161,30 +164,36 @@ export function Card({ car, inCompare, onToggleCompare, onOpen, onSetYou }: Prop
           </div>
         ) : null}
 
-        <div className="spec-row">
-          <span className="spec">
-            <IconGauge />
-            <b className="num">{miles(car.mileage)}</b>
-          </span>
-          {car.drivetrain && (
-            <span className="spec">
-              <IconDrive />
-              <b>{car.drivetrain}</b>
-            </span>
-          )}
-          {car.fuelType && (
-            <span className="spec">
-              <IconFuel />
-              <b>{car.fuelType}</b>
-            </span>
-          )}
-          {car.engine && (
-            <span className="spec">
-              <IconExt />
-              <b>{car.engine}</b>
-            </span>
-          )}
-        </div>
+        {/* Dealer · location — directly below the price / out-the-door */}
+        {loc && (
+          <div className="loc">
+            <IconPin />
+            {loc}
+          </div>
+        )}
+
+        {(car.drivetrain || car.fuelType || car.engine) && (
+          <div className="spec-row">
+            {car.drivetrain && (
+              <span className="spec">
+                <IconDrive />
+                <b>{car.drivetrain}</b>
+              </span>
+            )}
+            {car.fuelType && (
+              <span className="spec">
+                <IconFuel />
+                <b>{car.fuelType}</b>
+              </span>
+            )}
+            {car.engine && (
+              <span className="spec">
+                <IconExt />
+                <b>{car.engine}</b>
+              </span>
+            )}
+          </div>
+        )}
 
         <div className="badges">
           <TitleBadge car={car} />
@@ -192,13 +201,6 @@ export function Card({ car, inCompare, onToggleCompare, onOpen, onSetYou }: Prop
           <SellerBadge car={car} />
           <OwnerBadge car={car} />
         </div>
-
-        {loc && (
-          <div className="loc">
-            <IconPin />
-            {loc}
-          </div>
-        )}
 
         <div className="kf-block">
           <div className="kf-head">
