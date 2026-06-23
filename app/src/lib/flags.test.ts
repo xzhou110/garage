@@ -192,9 +192,10 @@ describe('getFlags — high mileage', () => {
 // ---------------------------------------------------------------------------
 describe('getFlags — milesPerYr ≥15,000', () => {
   // year:2024, mileage:46000, currentYear:2026 → 46000/(2026-2024)=23000/yr → ≥15k, <90k → info
-  it('milesPerYr ≥15000 and mileage <90000 → info flag', () => {
+  it('milesPerYr ≥15000 and <25000, mileage <90000 → warn flag (amber)', () => {
+    // year:2024, mileage:46000, currentYear:2026 → 23000/yr → warn
     const flags = getFlags(car({ year: 2024, mileage: 46000 }), 2026);
-    expect(flagsOfLevel(flags, 'info').some((f) => f.t.includes('mi/yr'))).toBe(true);
+    expect(flagsOfLevel(flags, 'warn').some((f) => f.t.includes('mi/yr'))).toBe(true);
   });
 
   it('milesPerYr ≥15000 but mileage ≥90000 → no milesPerYr info flag (suppressed)', () => {
@@ -211,10 +212,16 @@ describe('getFlags — milesPerYr ≥15,000', () => {
     expect(perYrInfo).toHaveLength(0);
   });
 
-  it('current-year car (age guard) — mileage divided by 1 (not zero)', () => {
-    // year:2026, mileage:20000, currentYear:2026 → age=max(1,0)=1 → 20000/yr ≥15k → info
+  it('current-year car (age guard) — mileage divided by 1 (not zero) → warn', () => {
+    // year:2026, mileage:20000, currentYear:2026 → age=max(1,0)=1 → 20000/yr ≥15k, <25k → warn
     const flags = getFlags(car({ year: 2026, mileage: 20000 }), 2026);
-    expect(flagsOfLevel(flags, 'info').some((f) => f.t.includes('mi/yr'))).toBe(true);
+    expect(flagsOfLevel(flags, 'warn').some((f) => f.t.includes('mi/yr'))).toBe(true);
+  });
+
+  it('milesPerYr ≥25000 (very high) → risk flag (red)', () => {
+    // year:2024, mileage:60000, currentYear:2026 → 30000/yr → risk
+    const flags = getFlags(car({ year: 2024, mileage: 60000 }), 2026);
+    expect(flagsOfLevel(flags, 'risk').some((f) => f.t.includes('mi/yr'))).toBe(true);
   });
 });
 
@@ -334,6 +341,19 @@ describe('getFlags — warranty', () => {
 
   it('valid non-CPO warranty → no warranty warn', () => {
     const flags = getFlags(car({ warranty: 'Toyota 3yr/36k', sellerType: 'Dealer' }), 2026);
+    expect(flags.filter((f) => f.t.toLowerCase().includes('warranty'))).toHaveLength(0);
+  });
+
+  it('expired basic but ACTIVE hybrid/powertrain coverage → no warranty warn (Toyota hybrid)', () => {
+    const flags = getFlags(
+      car({
+        warranty: 'Hybrid system 8yr/100k active; powertrain near limit; Basic 3yr/36k expired.',
+        sellerType: 'Dealer',
+        year: 2022,
+        mileage: 30000,
+      }),
+      2026,
+    );
     expect(flags.filter((f) => f.t.toLowerCase().includes('warranty'))).toHaveLength(0);
   });
 });

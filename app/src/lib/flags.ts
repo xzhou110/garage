@@ -32,8 +32,12 @@ export function getFlags(c: Car, currentYear: number = new Date().getFullYear())
 
   if (c.mileage && c.year) {
     const perYr = milesPerYr(c, currentYear);
-    if (perYr != null && perYr >= 15000 && c.mileage < 90000)
-      f.push({ lvl: 'info', t: `~${perYr.toLocaleString()} mi/yr — above the ~12k average; reflect the extra wear and shorter remaining warranty in your price.` });
+    if (perYr != null && c.mileage < 90000) {
+      if (perYr >= 25000)
+        f.push({ lvl: 'risk', t: `Very high mileage for the age — ~${perYr.toLocaleString()} mi/yr, well above the ~12k average. Often rental/fleet use; expect heavier wear and less remaining warranty — reflect it hard in your price.` });
+      else if (perYr >= 15000)
+        f.push({ lvl: 'warn', t: `~${perYr.toLocaleString()} mi/yr — above the ~12k average; reflect the extra wear and shorter remaining warranty in your price.` });
+    }
   }
 
   if (c.ownerCount != null && c.ownerCount >= 3)
@@ -47,9 +51,14 @@ export function getFlags(c: Car, currentYear: number = new Date().getFullYear())
   if (c.marketAvg && c.price && c.price < c.marketAvg * 0.85 && !BRANDED.includes(c.titleStatus))
     f.push({ lvl: 'info', t: 'Well below market — verify why (condition, title, undisclosed issue).' });
 
-  const warrantyNone = c.warranty && /none|void|expired/i.test(c.warranty);
-  if ((warrantyNone || !c.warranty) && c.sellerType !== 'CPO')
-    f.push({ lvl: 'warn', t: 'Likely out of factory warranty — price in out-of-pocket repairs.' });
+  // Don't cry "out of warranty" just because the text mentions an expired *basic* warranty —
+  // Toyota hybrids keep 8yr/100k hybrid-system + 10yr/150k battery coverage. Only warn when there's
+  // no warranty info at all, or it explicitly says gone AND no active coverage is mentioned.
+  const w = c.warranty || '';
+  const hasActiveCoverage = /\b(active|remaining|covered|in[- ]?warranty)\b|hybrid (battery|system|component)|powertrain|until\s*20\d\d/i.test(w);
+  const warrantyGone = /\bnone\b|\bvoid\b|\bexpired\b|out of warranty/i.test(w);
+  if ((!w || (warrantyGone && !hasActiveCoverage)) && c.sellerType !== 'CPO')
+    f.push({ lvl: 'warn', t: 'No remaining factory warranty — price in out-of-pocket repairs.' });
 
   if (c.daysOnMarket != null && c.daysOnMarket >= 60 && !BRANDED.includes(c.titleStatus))
     f.push({ lvl: 'info', t: `On market ${c.daysOnMarket} days — stale listing = negotiation leverage.` });
