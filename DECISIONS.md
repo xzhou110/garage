@@ -52,3 +52,10 @@ Each entry: decision · context · alternatives · rationale · reversible?
 - **Alternatives:** re-spawn fresh agents for each — rejected: each cold start re-reads the 257KB prototype + spec, costs more, and risks repeating the overload. Wait for the API — rejected: blocks a time-sensitive deliverable.
 - **Rationale:** "Bias toward fewer agents." Independent verification was preserved where it matters most: QA wrote the 155-test engine suite independently, and live DOM/console verification is independent of the code author.
 - **Mitigation/Reversible?** The independent `reviewer` can be re-run when the API recovers (logged as an open item in STATE).
+
+## ADR-008 — A single reported accident flags RED (risk), not amber
+- **Decision:** In `getFlags`, `accidents === 1` emits a **risk (red)** flag and escalates the card's overall signal to red, instead of the prototype's **warn (amber)**. 2+ accidents were already red; unknown (`null`) stays amber ("pull the history").
+- **Context:** User is buying a low-risk daily driver and treats any reported accident as a hard caution (they filter for "no accidents"). On the live data this fired for c10 (Carvana, 1 accident reported); the accident *badge* was already red, so the amber flag text was inconsistent.
+- **Alternatives:** keep spec fidelity (1 accident = amber) — rejected: under-weights a signal this buyer cares about and clashes with the red badge.
+- **Rationale:** Make the flag text + card border match the badge and the buyer's risk tolerance; a *confirmed* accident is a stronger signal than *unknown* history.
+- **Reversible?** Yes — one line in `flags.ts` (+ its test). Documented here so a future "restore prototype fidelity" pass doesn't silently revert it.

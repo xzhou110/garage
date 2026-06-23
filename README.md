@@ -20,7 +20,7 @@ npm run dev        # → http://localhost:5178
 Other commands (from `app/`):
 - `npm run build` — type-check + production bundle into `app/dist/`
 - `npm run preview` — serve the built bundle
-- `npm test` — run the engine unit tests (155 tests)
+- `npm test` — run the engine unit tests (161 tests)
 
 > Data persists in your browser's localStorage (in-app edits: ratings, status, new cars). The committed
 > seed lives in `app/src/data/cars.ts` and is the source of truth I edit when you send screenshots.
@@ -32,7 +32,9 @@ Other commands (from `app/`):
    features (marking anything *inferred from a package* as "confirm"), crop the photo, and append the car to
    `src/data/cars.ts`. You can also click **+ Add car** to enter one by hand, and **Edit** any card.
 2. **Triage** — each card shows price + transfer + ≈ out-the-door, the 9-feature pill row (✓ / ✕ / **? = unknown**),
-   and auto risk/value flags. A colored top border flags overall risk (red) / caution (amber) / good (green).
+   and auto risk/value flags. A colored top border flags overall risk (red) / caution (amber) / good (green). A
+   small car-id badge (e.g. `c2`) on each photo maps the card to the data file / chat references — and the search
+   box matches the id, so typing `c4` jumps straight to that car.
 3. **Compare** — tick ≥2 cars → the Compare tab shows a side-by-side table that auto-highlights the **best
    (green) / worst (red)** value in each row (cheapest price, lowest out-the-door, most features, etc.).
 4. **Filter / sort** — search, seller/title/accident chips, a filter panel (max price/mileage, min ratings,
