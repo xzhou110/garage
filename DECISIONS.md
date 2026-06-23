@@ -39,6 +39,13 @@ Each entry: decision · context · alternatives · rationale · reversible?
 - **Rationale:** Zero-auth instant export covers the daily need; Drive MCP covers "a real Sheet, updated in place" without app plumbing.
 - **Reversible?** Yes.
 
+## ADR-007 — Reversed ADR-003: deploy to PUBLIC GitHub Pages
+- **Decision:** Deploy via GitHub Actions to GitHub Pages from a **public** repo at `xzhou110.github.io/garage`. Supersedes ADR-003 (local-only).
+- **Context:** User now wants to view the app on the web from any device. Offered public Pages vs private login-gated (Cloudflare); user chose public Pages (simplest, matches their stack).
+- **Disclosure handling:** The Google Sheet sync URL is localStorage-only and was **verified absent** from the built bundle (only the input placeholder `…/exec` appears; no real `macros/s/<id>` / `AKfyc`). The car data in `cars.ts` IS bundled and public by design (user consented). **Do NOT** move the sheet URL into a `VITE_*` env var — Vite inlines those into the public JS, which would expose it. There are no real secrets in a client-only bundle.
+- **Mechanics:** `actions/configure-pages` `enablement:true` failed (the workflow `GITHUB_TOKEN` can't create a Pages site); enabled Pages out-of-band via `gh api POST /repos/.../pages -f build_type=workflow`, then dropped the flag. `base: './'` in vite config makes assets resolve under the `/garage/` subpath; hash routing avoids refresh 404s.
+- **Reversible?** Repo can be set private again (Pages then needs a paid plan); content seen while public may be cached/indexed.
+
 ## ADR-006 — PM implemented the engine + finished the frontend lane directly (not via re-spawn)
 - **Decision:** (a) PM ported the pure engine (flags/derive/format/exportSheet/sheetCols) itself; (b) after the frontend agent's report was lost to a 529 mid-run (components written, but no App.tsx and no CSS), PM wrote App.tsx + the full stylesheet itself instead of cold-spawning a replacement; (c) PM performed the code review itself after the reviewer spawn 529'd twice.
 - **Context:** Cost/time-sensitive (user buying a car this week). The engine is a verbatim port PM already held in context; a cold agent would only re-derive it. Two separate 529 API overloads disrupted subagents. No subagent-resume tool is available in this environment.

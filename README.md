@@ -1,8 +1,13 @@
-# Garage — used-car shortlist & compare (local)
+# Garage — used-car shortlist & compare
 
-A private, single-user dashboard for shopping used cars: capture each candidate from a screenshot, see
-auto risk/value flags, compare side-by-side on **out-the-door / total cost of ownership**, and export to
-Google Sheets. Runs entirely on your machine — no server, no accounts, no deploy.
+A single-user dashboard for shopping used cars: capture each candidate from a screenshot, see auto
+risk/value flags, compare side-by-side on **out-the-door / total cost of ownership**, and export to
+Google Sheets.
+
+**Live:** https://xzhou110.github.io/garage/ — deployed from `main` via GitHub Actions (`.github/workflows/deploy.yml`).
+The Google Sheet sync URL is **never** in the code/bundle (it lives only in your browser's localStorage), so
+it is not exposed by the public site. Note: localStorage is per-domain, so set your Sheet URL once on the live
+site too (Assumptions), separate from localhost. Runs locally as well (below).
 
 ## Run it
 
