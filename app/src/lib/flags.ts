@@ -24,6 +24,11 @@ export function getFlags(c: Car, currentYear: number = new Date().getFullYear())
   else if (c.accidents == null)
     f.push({ lvl: 'warn', t: 'Accident history unknown — pull Carfax/AutoCheck.' });
 
+  // Prior-theft red flag — local addition (not in the original prototype). A disclosed theft
+  // (stolen & recovered) is material even when the title stays clean: hidden damage + resale/insurance hit.
+  if (c.priorTheft)
+    f.push({ lvl: 'risk', t: 'Prior theft history (stolen & recovered) — even with a clean title, check for hidden damage and expect a resale/insurance hit; price below clean cars.' });
+
   if (!c.vin)
     f.push({ lvl: 'warn', t: "No VIN on file — can't run history or open-recall check." });
 

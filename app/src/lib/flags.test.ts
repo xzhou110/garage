@@ -151,6 +151,30 @@ describe('getFlags — accidents', () => {
 });
 
 // ---------------------------------------------------------------------------
+// §5.5 — PRIOR THEFT HISTORY (local addition) → red risk flag, like an accident
+// ---------------------------------------------------------------------------
+describe('getFlags — prior theft history', () => {
+  it('priorTheft === true → risk flag (red), even with a clean title', () => {
+    const flags = getFlags(car({ priorTheft: true, titleStatus: 'Clean', accidents: 0 }), 2026);
+    expect(flagsOfLevel(flags, 'risk').some((f) => f.t.toLowerCase().includes('theft'))).toBe(true);
+  });
+
+  it('priorTheft === true → signalLevel is "risk" (card goes red)', () => {
+    expect(signalLevel(car({ priorTheft: true, titleStatus: 'Clean', accidents: 0 }), 2026)).toBe('risk');
+  });
+
+  it('priorTheft undefined → no theft flag', () => {
+    const flags = getFlags(car({ accidents: 0 }), 2026);
+    expect(flags.filter((f) => f.t.toLowerCase().includes('theft'))).toHaveLength(0);
+  });
+
+  it('priorTheft === false → no theft flag', () => {
+    const flags = getFlags(car({ priorTheft: false }), 2026);
+    expect(flags.filter((f) => f.t.toLowerCase().includes('theft'))).toHaveLength(0);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // §5.5 — VIN
 // ---------------------------------------------------------------------------
 describe('getFlags — VIN', () => {

@@ -55,6 +55,8 @@ export interface Car {
   ownerType?: OwnerType; // prior use: personal, ex-rental/fleet, lease, etc.
   accidents: number | null;
   titleStatus: TitleStatus;
+  /** Prior theft record disclosed (e.g. CarMax/AutoCheck "Prior Theft History") — stolen & recovered; the title may stay clean. true → red risk flag. */
+  priorTheft?: boolean;
   drivetrain: Drivetrain;
   fuelType: FuelType;
   engine: string;

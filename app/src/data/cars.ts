@@ -940,6 +940,7 @@ export const CARS: Car[] = [
     "ownerType": "Personal",
     "accidents": 0,
     "titleStatus": "Clean",
+    "priorTheft": true,
     "drivetrain": "AWD",
     "fuelType": "Hybrid",
     "engine": "2.5L I4 Hybrid (eCVT)",
