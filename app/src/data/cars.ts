@@ -28,6 +28,7 @@ export const CARS: Car[] = [
     "warranty": "Hybrid system (battery, inverter, controls) 8yr/100k active (≈2031); hybrid battery 10yr/150k active (≈2033). Powertrain 5yr/60k active but close — 48.3k mi, ~12k left (≈2028). Basic 3yr/36k expired. No factory CPO — but the expensive hybrid components stay covered.",
     "feat": {
       "moonroof": true,
+      "panoramicRoof": false,
       "heatedSeats": true,
       "heatedWheel": null,
       "powerSeats": true,
@@ -85,6 +86,7 @@ export const CARS: Car[] = [
     "warranty": "Hybrid system 8yr/100k active (≈2030); hybrid battery 10yr/150k active (≈2032). Powertrain 5yr/60k essentially used up by miles (58.9k of 60k). Basic 3yr/36k expired. No CPO — but hybrid coverage remains.",
     "feat": {
       "moonroof": true,
+      "panoramicRoof": false,
       "heatedSeats": true,
       "heatedWheel": true,
       "powerSeats": null,
@@ -140,6 +142,7 @@ export const CARS: Car[] = [
     "warranty": "Toyota Certified (Gold): 12mo/12k comprehensive + 7yr/100k powertrain (from original in-service) + 1yr/15k free maintenance; hybrid battery 10yr/150k. CPO finance offer 5.19% APR / 72mo.",
     "feat": {
       "moonroof": true,
+      "panoramicRoof": false,
       "heatedSeats": null,
       "heatedWheel": null,
       "powerSeats": null,
@@ -197,6 +200,7 @@ export const CARS: Car[] = [
     "warranty": "Hybrid system 8yr/100k active (≈2031); hybrid battery 10yr/150k active (≈2033). Powertrain 5yr/60k active — 45.7k mi, ~14k left (≈2028). Basic 3yr/36k expired by miles. Used (not CPO), but hybrid coverage remains.",
     "feat": {
       "moonroof": true,
+      "panoramicRoof": false,
       "heatedSeats": true,
       "heatedWheel": true,
       "powerSeats": null,
@@ -257,6 +261,7 @@ export const CARS: Car[] = [
     "warranty": "Hybrid system 8yr/100k active (≈2030); hybrid battery 10yr/150k active (≈2032). Powertrain 5yr/60k active — 48k mi, ~12k left (≈2027). Basic 3yr/36k expired by miles. Not Toyota CPO; CarMax adds a 30-day/1,500-mi limited warranty + 10-day money-back return (MaxCare extended plan available).",
     "feat": {
       "moonroof": false,
+      "panoramicRoof": false,
       "heatedSeats": false,
       "heatedWheel": false,
       "powerSeats": true,
@@ -321,6 +326,7 @@ export const CARS: Car[] = [
     "warranty": "Hybrid system 8yr/100k active (≈2032); hybrid battery 10yr/150k active (≈2034). Powertrain 5yr/60k active — 48.2k mi, ~12k left (≈2029). Basic 3yr/36k expired by miles. Not CPO; CarGurus 7-day delivery return if not as described.",
     "feat": {
       "moonroof": null,
+      "panoramicRoof": false,
       "heatedSeats": null,
       "heatedWheel": null,
       "powerSeats": null,
@@ -378,6 +384,7 @@ export const CARS: Car[] = [
     "warranty": "Hybrid system (HV components) 8yr/100k active (≈2030); hybrid battery 10yr/150k active (≈2032). Powertrain 5yr/60k essentially exhausted by miles (57.6k of 60k; ~2.4k left). Basic 3yr/36k expired. Not Toyota CPO — CarMax adds a 30-day/1,500-mi limited warranty + 10-day money-back return (MaxCare extended plan available); hybrid coverage remains.",
     "feat": {
       "moonroof": true,
+      "panoramicRoof": false,
       "heatedSeats": null,
       "heatedWheel": null,
       "powerSeats": null,
@@ -438,6 +445,7 @@ export const CARS: Car[] = [
     "warranty": "Powertrain 5yr/60k ACTIVE — 39.6k mi, ~20k left (≈2028); meaningful coverage remaining (best of the non-CPO cars). Hybrid system 8yr/100k active (≈2031); hybrid battery 10yr/150k active (≈2033). Basic 3yr/36k expired by miles. Not Toyota CPO — CarMax adds a 30-day/1,500-mi limited warranty + 10-day money-back return (MaxCare extended plan available).",
     "feat": {
       "moonroof": null,
+      "panoramicRoof": false,
       "heatedSeats": null,
       "heatedWheel": null,
       "powerSeats": null,
@@ -496,6 +504,7 @@ export const CARS: Car[] = [
     "warranty": "Powertrain 5yr/60k active but nearly used by miles (54.2k of 60k; ~5.8k left, ≈2027). Hybrid system 8yr/100k active (≈2030); hybrid battery 10yr/150k active (≈2032). Basic 3yr/36k expired. Not Toyota CPO — CarMax adds a 30-day/1,500-mi limited warranty + 10-day money-back return (MaxCare extended plan available).",
     "feat": {
       "moonroof": true,
+      "panoramicRoof": false,
       "heatedSeats": null,
       "heatedWheel": null,
       "powerSeats": true,
@@ -557,6 +566,7 @@ export const CARS: Car[] = [
     "warranty": "Powertrain 5yr/60k ACTIVE — 37.8k mi, ~22k left (≈2028); Carvana confirms the original powertrain (hybrid battery + drive unit) warranty is still active. Hybrid system 8yr/100k active (≈2031); hybrid battery 10yr/150k active (≈2033). Basic 3yr/36k expired by miles. Not Toyota CPO — Carvana adds a 7-day money-back return + 100-day/4,189-mi limited warranty (CarvanaCare available).",
     "feat": {
       "moonroof": true,
+      "panoramicRoof": false,
       "heatedSeats": false,
       "heatedWheel": false,
       "powerSeats": true,
@@ -620,6 +630,7 @@ export const CARS: Car[] = [
     "warranty": "FULL factory warranty active — best on your list. Basic bumper-to-bumper 3yr/36k still active (28.8k mi, ≈2028); Powertrain 5yr/60k active (≈2030); Hybrid system 8yr/100k active (≈2033); hybrid battery 10yr/150k active (≈2035). Listing notes 'Remainder of Factory Warranty.' Not CPO; traditional-dealer sale.",
     "feat": {
       "moonroof": false,
+      "panoramicRoof": false,
       "heatedSeats": false,
       "heatedWheel": false,
       "powerSeats": true,
@@ -683,6 +694,7 @@ export const CARS: Car[] = [
     "warranty": "Powertrain 5yr/60k active — 47.8k mi, ~12k left (≈2028). Hybrid system 8yr/100k active (≈2031); hybrid battery 10yr/150k active (≈2033). Basic 3yr/36k expired by miles. Not Toyota CPO — CarMax adds a 30-day/1,500-mi limited warranty + 10-day money-back return (MaxCare available).",
     "feat": {
       "moonroof": false,
+      "panoramicRoof": false,
       "heatedSeats": true,
       "heatedWheel": true,
       "powerSeats": true,
@@ -745,6 +757,7 @@ export const CARS: Car[] = [
     "warranty": "Powertrain 5yr/60k active (≈2028); hybrid system 8yr/100k active (≈2031); hybrid battery 10yr/150k active (≈2033). Basic 3yr/36k just lapsed by time (in service 03/2023). Plus DGDG Premium's included 12-month/12,000-mile limited service contract. NOTE: AutoCheck shows 2 OPEN RECALLS — free fix at any Toyota dealer.",
     "feat": {
       "moonroof": true,
+      "panoramicRoof": true,
       "heatedSeats": true,
       "heatedWheel": true,
       "powerSeats": true,
@@ -779,7 +792,7 @@ export const CARS: Car[] = [
     "tco5yr": null,
     "expertRating": 4,
     "rating": 0,
-    "notes": "Capitol Chevrolet / DGDG Premium Used (San Jose, ~25 mi; stock UDG210). The TOP trim — RAV4 Hybrid LIMITED, the most loaded car on your board: panoramic glass roof, heated + ventilated front seats + heated steering wheel (Limited Weather Pkg), Bird's Eye View 360 monitor, digital rearview mirror, Qi wireless charging, power liftgate, 8-way power seat, 18\" alloys. It ticks ALL your priority comforts (moonroof + heated seats + heated wheel). MSRP was $43,229; sale $40,499 (+$85 doc +$37 e-file). DGDG Premium includes a 12-mo/12,000-mi limited service contract. It has JBL premium audio (standard on the Limited grade — which is why it isn't itemized in the sticker's optional 'added features'), making it a full **9/9** on your tracked features — the only car on the board that has every one.\n\nHistory is excellent: AutoCheck SINGLE owner, Vehicle Usage = PERSONAL, clean title, NO accidents, AutoCheck Score 94/95, 26 service records. LOWEST miles-per-year on your board — 30,395 on a 2023 (in service 03/2023) ≈ ~10k/yr, below the 12k average.\n\n*** THREE things to weigh: (1) PRICE — $40,499 is ~$5–6k above the loaded SEs (c4 $34,641, c12 $34,998) and well over the ~$36k you'd been targeting. You're paying for the Limited kit + the low miles. (2) 2 OPEN RECALLS (AutoCheck) — free fix at any Toyota dealer; have the dealer clear them before delivery. (3) Unusually heavy early service for a low-mileage car — 3 brake-pad replacements, a 12V battery replacement, and 4 coolant flushes clustered ~12/28/2024 (~15.5k mi). Could be warranty work or aggressive dealer-bundled maintenance, but 3 brake jobs by 15k mi on a regen-braking hybrid is atypical — ask what happened.\n\nExpert 4/5: objectively the best-equipped, lowest-miles, cleanest-history car here — single personal owner, 26 service records, AutoCheck 94, and every comfort you want (panoramic roof + heated/ventilated seats + heated wheel + power liftgate). Held back from 5 by the PRICE (a real premium over the loaded SEs, above your budget), the 2 open recalls, and the odd early-service cluster to explain. A near-5 car at a price that only makes sense if you'll stretch for the top trim + low miles; if value rules, c4/c12 deliver your must-haves for ~$5k less. Worth a test drive to feel whether the Limited extras justify the stretch.",
+    "notes": "Capitol Chevrolet / DGDG Premium Used (San Jose, ~25 mi; stock UDG210). The TOP trim — RAV4 Hybrid LIMITED, the most loaded car on your board: panoramic glass roof, heated + ventilated front seats + heated steering wheel (Limited Weather Pkg), Bird's Eye View 360 monitor, digital rearview mirror, Qi wireless charging, power liftgate, 8-way power seat, 18\" alloys. It ticks ALL your priority comforts (moonroof + heated seats + heated wheel). MSRP was $43,229; sale $40,499 (+$85 doc +$37 e-file). DGDG Premium includes a 12-mo/12,000-mi limited service contract. It has JBL premium audio (standard on the Limited grade — which is why it isn't itemized in the sticker's optional 'added features'), making it a full **10/10** on your tracked features (incl. the panoramic roof) — the only car on the board that has every one.\n\nHistory is excellent: AutoCheck SINGLE owner, Vehicle Usage = PERSONAL, clean title, NO accidents, AutoCheck Score 94/95, 26 service records. LOWEST miles-per-year on your board — 30,395 on a 2023 (in service 03/2023) ≈ ~10k/yr, below the 12k average.\n\n*** THREE things to weigh: (1) PRICE — $40,499 is ~$5–6k above the loaded SEs (c4 $34,641, c12 $34,998) and well over the ~$36k you'd been targeting. You're paying for the Limited kit + the low miles. (2) 2 OPEN RECALLS (AutoCheck) — free fix at any Toyota dealer; have the dealer clear them before delivery. (3) Unusually heavy early service for a low-mileage car — 3 brake-pad replacements, a 12V battery replacement, and 4 coolant flushes clustered ~12/28/2024 (~15.5k mi). Could be warranty work or aggressive dealer-bundled maintenance, but 3 brake jobs by 15k mi on a regen-braking hybrid is atypical — ask what happened.\n\nExpert 4/5: objectively the best-equipped, lowest-miles, cleanest-history car here — single personal owner, 26 service records, AutoCheck 94, and every comfort you want (panoramic roof + heated/ventilated seats + heated wheel + power liftgate). Held back from 5 by the PRICE (a real premium over the loaded SEs, above your budget), the 2 open recalls, and the odd early-service cluster to explain. A near-5 car at a price that only makes sense if you'll stretch for the top trim + low miles; if value rules, c4/c12 deliver your must-haves for ~$5k less. Worth a test drive to feel whether the Limited extras justify the stretch.",
     "image": "img/c13.jpg",
     "sourceUrl": "https://www.capitolchevysj.com/inventory/used-2023-toyota-rav4-hybrid-limited-awd-sport-utility-jtmd6rfv9pd540554/"
   }

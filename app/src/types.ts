@@ -6,6 +6,7 @@
 
 export type FeatureKey =
   | 'moonroof'
+  | 'panoramicRoof'
   | 'heatedSeats'
   | 'heatedWheel'
   | 'powerSeats'

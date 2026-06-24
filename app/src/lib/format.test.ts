@@ -153,6 +153,38 @@ describe('featState', () => {
 });
 
 // ---------------------------------------------------------------------------
+// featState() — panoramic roof ⟹ sunroof/moonroof (one-way feature subsumption)
+// ---------------------------------------------------------------------------
+describe('featState — panoramic roof implication', () => {
+  it("panoramicRoof:true → 'yes' for panoramicRoof", () => {
+    expect(featState(car({ feat: { panoramicRoof: true } }), 'panoramicRoof')).toBe('yes');
+  });
+
+  it("panoramicRoof:true implies moonroof 'yes' even when moonroof is unset", () => {
+    expect(featState(car({ feat: { panoramicRoof: true } }), 'moonroof')).toBe('yes');
+  });
+
+  it("panoramicRoof:true overrides an explicit moonroof:false (the stronger feature wins)", () => {
+    expect(featState(car({ feat: { panoramicRoof: true, moonroof: false } }), 'moonroof')).toBe('yes');
+  });
+
+  it("a plain sunroof does NOT imply a panoramic roof (one-way)", () => {
+    expect(featState(car({ feat: { moonroof: true } }), 'panoramicRoof')).toBe('unk');
+  });
+
+  it("panoramicRoof:false → 'no', and leaves moonroof untouched", () => {
+    const c = car({ feat: { panoramicRoof: false, moonroof: true } });
+    expect(featState(c, 'panoramicRoof')).toBe('no');
+    expect(featState(c, 'moonroof')).toBe('yes');
+  });
+
+  it('a panoramic car counts BOTH roof features in featCount', () => {
+    // panoramic present (moonroof unset) → moonroof implied yes → 2 toward the count.
+    expect(featCount(car({ feat: { panoramicRoof: true } }))).toBe(2);
+  });
+});
+
+// ---------------------------------------------------------------------------
 // featCount() — counts only 'yes', not 'unk' or 'no'
 // ---------------------------------------------------------------------------
 describe('featCount', () => {

@@ -1,5 +1,5 @@
 import type { Car, FeatureKey, FeatState } from '../types';
-import { FEATURES } from '../data/features';
+import { FEATURES, FEATURE_IMPLIES } from '../data/features';
 
 /** "$35,999" — em-dash for null/undefined (ported from prototype:578). 0 renders as "$0". */
 export function money(n: number | null | undefined): string {
@@ -11,10 +11,18 @@ export function miles(n: number | null | undefined): string {
   return n || n === 0 ? Number(n).toLocaleString('en-US') + ' mi' : '—';
 }
 
-/** Tri-state for a feature: 'yes' | 'no' | 'unk'. 'unk' must never collapse to 'no'. */
+/**
+ * Tri-state for a feature: 'yes' | 'no' | 'unk'. 'unk' must never collapse to 'no'.
+ * A stronger feature can imply this one (see FEATURE_IMPLIES): e.g. a panoramic roof
+ * counts as a sunroof/moonroof, so it wins even over an explicit moonroof:false.
+ */
 export function featState(c: Car, k: FeatureKey): FeatState {
-  const v = (c.feat || {})[k];
-  return v === true ? 'yes' : v === false ? 'no' : 'unk';
+  const feat = c.feat || {};
+  if (feat[k] === true) return 'yes';
+  for (const src in FEATURE_IMPLIES) {
+    if (FEATURE_IMPLIES[src as FeatureKey]!.includes(k) && feat[src as FeatureKey] === true) return 'yes';
+  }
+  return feat[k] === false ? 'no' : 'unk';
 }
 
 /** Count of features the car definitively HAS (only 'yes'). */

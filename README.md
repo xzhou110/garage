@@ -88,10 +88,15 @@ dialog (the header **Export** button only opens the dialog).
 **Changed the script code?** (e.g. to add the bold-title/auto-fit formatting above.) Push it live the same way:
 **Deploy → Manage deployments → ✏️ Edit → Version: New version → Deploy** — the `/exec` URL stays the same.
 
-## The 9 tracked features
-Sunroof/moonroof · heated seats · heated steering wheel · power seats · JBL/premium audio · keyless entry +
-push start · Bluetooth · power liftgate · immobilizer. Tri-state: ✓ has · ✕ confirmed absent · **? unknown**
-(never silently treated as "no").
+## The 10 tracked features
+Sunroof/moonroof · **panoramic roof** · heated seats · heated steering wheel · power seats · JBL/premium audio ·
+keyless entry + push start · Bluetooth · power liftgate · immobilizer. Tri-state: ✓ has · ✕ confirmed absent ·
+**? unknown** (never silently treated as "no").
+
+> **Panoramic roof ⟹ sunroof (one-way).** A panoramic roof *is* a (bigger, fixed-glass) sunroof, so a car
+> marked as having a panoramic roof automatically counts as having the sunroof/moonroof too. The reverse does
+> **not** hold — a plain sunroof gives no panoramic credit. The implication is derived in the engine
+> (`featState`), so it holds everywhere: pills, detail, compare, export, and the "must-have" filter.
 
 ## Project layout
 ```

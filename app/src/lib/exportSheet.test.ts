@@ -59,7 +59,7 @@ function car(overrides: Partial<Car> = {}): Car {
   };
 }
 
-// The authoritative expected column count from SHEET_COLS (24 static + 9 features + 8 static = 41)
+// The authoritative expected column count from SHEET_COLS (25 static + 10 features + 8 static = 43)
 const EXPECTED_COL_COUNT = SHEET_COLS.length;
 
 // ---------------------------------------------------------------------------
@@ -82,8 +82,8 @@ describe('sheetMatrix — structure', () => {
     expect(matrix[0][1]).toBe('Year');
   });
 
-  it('total column count matches SHEET_COLS length (25 static + 9 features + 8 static = 42)', () => {
-    expect(EXPECTED_COL_COUNT).toBe(42);
+  it('total column count matches SHEET_COLS length (25 static + 10 features + 8 static = 43)', () => {
+    expect(EXPECTED_COL_COUNT).toBe(43);
   });
 
   it('exactly one car row + one title row = 2 rows for one car', () => {
@@ -117,14 +117,15 @@ describe('sheetMatrix — structure', () => {
 });
 
 // ---------------------------------------------------------------------------
-// sheetMatrix — the 9 feature columns render Yes / No / ?
+// sheetMatrix — the 10 feature columns render Yes / No / ?
 // ---------------------------------------------------------------------------
 describe('sheetMatrix — feature columns', () => {
-  // The feature columns start at index 24 (0-based) after 24 static columns
-  // Feature titles come from FEATURES long labels
+  // The feature columns start at index 25 (0-based) after 25 static columns.
+  // Feature titles come from FEATURES long labels; tests use indexOf so they
+  // stay correct regardless of the exact offset.
   const featureTitles = FEATURES.map(([, , long]) => long);
 
-  it('titles row contains all 9 feature column headers (long labels)', () => {
+  it('titles row contains all 10 feature column headers (long labels)', () => {
     const matrix = sheetMatrix([car()]);
     const titles = matrix[0] as string[];
     for (const label of featureTitles) {
@@ -139,6 +140,25 @@ describe('sheetMatrix — feature columns', () => {
     const moonroofIdx = titles.indexOf('Sunroof / moonroof');
     expect(moonroofIdx).toBeGreaterThan(-1);
     expect(matrix[1][moonroofIdx]).toBe('Yes');
+  });
+
+  it('has a "Panoramic roof" column, and a panoramic car exports BOTH it and (implied) moonroof as "Yes"', () => {
+    // Only panoramicRoof set — the moonroof column must still read "Yes" via the implication.
+    const c = car({ feat: { panoramicRoof: true } });
+    const matrix = sheetMatrix([c]);
+    const titles = matrix[0] as string[];
+    const panoIdx = titles.indexOf('Panoramic roof');
+    const moonIdx = titles.indexOf('Sunroof / moonroof');
+    expect(panoIdx).toBeGreaterThan(-1);
+    expect(matrix[1][panoIdx]).toBe('Yes');
+    expect(matrix[1][moonIdx]).toBe('Yes');
+  });
+
+  it('a plain sunroof does NOT imply a panoramic roof (one-way)', () => {
+    const c = car({ feat: { moonroof: true } }); // panoramicRoof absent
+    const matrix = sheetMatrix([c]);
+    const titles = matrix[0] as string[];
+    expect(matrix[1][titles.indexOf('Panoramic roof')]).toBe('?');
   });
 
   it('feature column for immobilizer=false renders "No"', () => {
@@ -167,7 +187,7 @@ describe('sheetMatrix — feature columns', () => {
     expect(matrix[1][idx]).toBe('?');
   });
 
-  it('all 9 features render Yes/No/? (never boolean true/false)', () => {
+  it('all 10 features render Yes/No/? (never boolean true/false)', () => {
     const c = car({
       feat: {
         moonroof: true,

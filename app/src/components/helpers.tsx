@@ -3,7 +3,7 @@
 import type { ReactElement } from 'react';
 import type { Car, FlagLevel, Status } from '../types';
 import { otd } from '../lib/derive';
-import { featCount } from '../lib/format';
+import { featCount, featState } from '../lib/format';
 import { IconCheck, IconInfo, IconRisk, IconWarn } from './icons';
 import type { Filters } from '../state/useGarage';
 
@@ -54,8 +54,10 @@ export function applyFilters(cars: Car[], f: Filters): Car[] {
     if (f.maxMileage != null && (c.mileage == null || c.mileage > f.maxMileage)) return false;
     if (f.minExpert && !((c.expertRating || 0) >= f.minExpert)) return false;
     if (f.minYou && !((c.rating || 0) >= f.minYou)) return false;
+    // featState (not raw c.feat) so feature implications hold: a "must have moonroof"
+    // filter also matches a car whose panoramic roof implies it.
     for (const k of f.reqFeatures) {
-      if (c.feat[k] !== true) return false;
+      if (featState(c, k) !== 'yes') return false;
     }
     return true;
   });
