@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import type { ReactElement } from 'react';
-import type { Car, OwnerType } from '../types';
+import type { Car, OwnerType, Settings } from '../types';
 import { FEATURES } from '../data/features';
 import { carName, featCount, featState, miles, money } from '../lib/format';
-import { otd, totalFees } from '../lib/derive';
+import { effectiveTco, isTcoEstimated, otd, totalFees } from '../lib/derive';
 import { getFlags, signalLevel } from '../lib/flags';
 import { assetUrl, flagIcon } from './helpers';
 import { RatingStars } from './RatingStars';
@@ -11,6 +11,7 @@ import { IconCar, IconCheck, IconDrive, IconExt, IconFuel, IconPin, IconWarn } f
 
 interface Props {
   car: Car;
+  settings: Settings;
   inCompare: boolean;
   onToggleCompare: (id: string) => void;
   onOpen: (id: string) => void;
@@ -106,11 +107,13 @@ function OwnerBadge({ car }: { car: Car }): ReactElement | null {
   );
 }
 
-export function Card({ car, inCompare, onToggleCompare, onOpen, onSetYou }: Props): ReactElement {
+export function Card({ car, settings, inCompare, onToggleCompare, onOpen, onSetYou }: Props): ReactElement {
   const sig = signalLevel(car);
   const flags = getFlags(car).slice(0, 3);
   const fees = totalFees(car);
   const otdVal = otd(car);
+  const tco = effectiveTco(car, settings);
+  const tcoEstimated = isTcoEstimated(car);
   const loc = [car.dealership, car.location].filter(Boolean).join(' · ');
 
   return (
@@ -164,6 +167,16 @@ export function Card({ car, inCompare, onToggleCompare, onOpen, onSetYou }: Prop
             {otdVal != null ? <span className="otd">≈ {money(otdVal)} out-the-door*</span> : null}
           </div>
         ) : null}
+
+        {tco != null && (
+          <div className="card-tco" title={tcoEstimated ? 'Estimated total cost of ownership over your horizon (Assumptions)' : 'Total cost of ownership you entered'}>
+            <span className="card-tco-l">
+              {tcoEstimated ? 'Est. ' : ''}
+              {settings.years}-yr cost to own
+            </span>
+            <span className="card-tco-v num">{money(tco)}</span>
+          </div>
+        )}
 
         {/* Dealer · location — directly below the price / out-the-door */}
         {loc && (

@@ -38,6 +38,11 @@
     estimated" + breakdown (dep $5,106 hand-checked ✓); compare row + best marker; **changing horizon to 8yr live-
     updated values, labels, and the ranking**; console 0 errors. (Screenshot tool timed out on the wide compare
     table — a harness hiccup, not an app error; verified via DOM assertions instead.)
+  - **TCO on each card (2026-06-25):** per user, added an **"Est. N-yr cost to own"** line to every grid card
+    (in the price cluster, below out-the-door), driven by the same Assumptions horizon (5yr → 5-yr cost, 8yr → 8-yr
+    cost). Threaded `settings` App→Grid→Card; new `.card-tco` style. Live-verified: 18/18 cards show it; price≠cost
+    is visible (c11 costs more to buy than c6 but less to own); switching 5→8yr updates label + value on the cards;
+    211 tests still green, build green.
 - **Open items (non-blocking):**
   - Re-run the independent `reviewer` subagent when the API recovers (it 529'd twice; PM did the review — see review-findings.md).
   - Offer: create/refresh a **real Google Sheet** in the user's Drive via the connected Drive MCP (needs user OK — outward-facing).

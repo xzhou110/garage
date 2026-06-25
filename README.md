@@ -31,7 +31,8 @@ Other commands (from `app/`):
    I extract year/trim/price/mileage/title/accidents/features/etc., map vendor wording onto the 9 tracked
    features (marking anything *inferred from a package* as "confirm"), crop the photo, and append the car to
    `src/data/cars.ts`. You can also click **+ Add car** to enter one by hand, and **Edit** any card.
-2. **Triage** — each card shows price + transfer + ≈ out-the-door, the 9-feature pill row (✓ / ✕ / **? = unknown**),
+2. **Triage** — each card shows price + transfer + ≈ out-the-door + **estimated N-yr cost to own** (TCO over your
+   horizon), the 9-feature pill row (✓ / ✕ / **? = unknown**),
    and auto risk/value flags. A colored top border flags overall risk (red) / caution (amber) / good (green). A
    small car-id badge (e.g. `c2`) on each photo maps the card to the data file / chat references — and the search
    box matches the id, so typing `c4` jumps straight to that car.
@@ -96,9 +97,9 @@ fuel can cost *more* to own. Garage estimates each car's **5-component lifetime 
 insurance + maintenance/repairs + taxes & registration) over **your** ownership horizon and uses it to rank the board.
 
 - **Choose how long you'll keep it.** Open **Assumptions** and set **Ownership horizon (years)** + **Annual miles**.
-  Everything recomputes live — the TCO sort, the **Est. TCO** row in Compare, and the per-car breakdown in the
-  detail view. A longer horizon spreads the big up-front depreciation hit, so the *best buy can change* with how
-  long you hold the car.
+  Everything recomputes live — the **"Est. N-yr cost to own"** line on every card, the TCO sort, the **Est. TCO**
+  row in Compare, and the per-car breakdown in the detail view. A longer horizon spreads the big up-front
+  depreciation hit, so the *best buy can change* with how long you hold the car (pick 5 → get a 5-yr cost; pick 8 → an 8-yr cost).
 - **It's an estimate, by design.** Cost rates (depreciation curve, insurance, upkeep) come from segment-typical
   reference tables (RAV4-anchored depreciation curve), priced on a **cash basis** with **California** averages for
   fuel/tax/registration/insurance. Differences between cars come from **price, age and mileage** — which is exactly

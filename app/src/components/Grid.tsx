@@ -1,5 +1,5 @@
 import type { ReactElement } from 'react';
-import type { Car } from '../types';
+import type { Car, Settings } from '../types';
 import { Card } from './Card';
 import { IconCar } from './icons';
 
@@ -8,6 +8,8 @@ interface Props {
   cars: Car[];
   /** Total count in the garage (drives the "no cars yet" vs "no matches" empty state). */
   totalCount: number;
+  /** Ownership assumptions (years + miles) — drives each card's TCO. */
+  settings: Settings;
   compareSet: Set<string>;
   onToggleCompare: (id: string) => void;
   onOpen: (id: string) => void;
@@ -24,7 +26,7 @@ function Empty({ title, msg }: { title: string; msg: string }): ReactElement {
   );
 }
 
-export function Grid({ cars, totalCount, compareSet, onToggleCompare, onOpen, onSetYou }: Props): ReactElement {
+export function Grid({ cars, totalCount, settings, compareSet, onToggleCompare, onOpen, onSetYou }: Props): ReactElement {
   if (totalCount === 0) {
     return (
       <div className="grid">
@@ -48,6 +50,7 @@ export function Grid({ cars, totalCount, compareSet, onToggleCompare, onOpen, on
         <Card
           key={c.id}
           car={c}
+          settings={settings}
           inCompare={compareSet.has(c.id)}
           onToggleCompare={onToggleCompare}
           onOpen={onOpen}

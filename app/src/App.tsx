@@ -174,6 +174,7 @@ export default function App() {
           <Grid
             cars={visible}
             totalCount={g.cars.length}
+            settings={g.settings}
             compareSet={g.compareSet}
             onToggleCompare={g.toggleCompare}
             onOpen={(id) => setDetailId(id)}
