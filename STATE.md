@@ -3,7 +3,7 @@
 - **Product:** Garage — a local used-car shortlist & compare dashboard (personal, single-user). Buying deadline: end of June 2026.
 - **Phase:** ✅ Built, verified, and **deployed to GitHub Pages** — live at https://xzhou110.github.io/garage/ (public repo `xzhou110/garage`, auto-deploy from `main` via Actions). Also runs locally (`cd app && npm run dev` → http://localhost:5178). 18 cars (c1–c18). Sheet URL verified absent from the public bundle.
 - **Done:**
-  - Vite/React/TS migration of the prototype complete. Pure engine ported verbatim (+ later additions: panoramic-roof implication, prior-theft risk flag) + **173 unit tests pass**.
+  - Vite/React/TS migration of the prototype complete. Pure engine ported verbatim (+ later additions: panoramic-roof implication, prior-theft risk flag, vendored TCO engine) + **211 unit tests pass**.
   - Full UI (grid, compare, detail, filters/sort, add/edit form, export, settings, theme) built and wired.
   - `npm run build` GREEN (tsc 0 errors). Live-verified: console 0 errors; both seeds render; compare best/worst
     correct; export = titles row + 1 row/car (41 cols); light/dark toggle persists; localStorage persistence
@@ -21,6 +21,23 @@
     filter, which was switched off raw `feat[k]` onto `featState` for consistency), but a plain sunroof never implies
     panoramic. Data: **c13** = panoramic ✓ (now a full 10/10); c1–c12 = ✕ (panoramic glass roof is RAV4 Limited-only,
     and c1, the only other Limited, lists a regular power moonroof). Tests 161→**169**. Build green; verified live.
+  - **Feature added (2026-06-25): live TCO ranking** (ADR-009). Brought the **Total Cost of Ownership engine** over
+    from the sibling repo `car-tco-compare` by **vendoring its pure calculator** into `app/src/lib/tco/`
+    (`engine.ts` + `depreciation.ts` + `reference.ts`, verbatim with provenance headers + a `resolve.ts` adapter
+    mapping a garage `Car`→engine `Vehicle`). Evaluated and rejected a shared npm package / git submodule / runtime
+    API (keeps garage a dependency-free static SPA — see ADR-009). TCO is now **computed live** from the existing
+    **Assumptions → years + miles** knobs: depreciation (RAV4-anchored retention curve) + fuel + insurance +
+    maintenance/repairs + taxes, cash basis, CA averages. The old `tco5yr` field became a **manual override**
+    (Edmunds/AAA), the computed value is the default, and a latent bug (per-year divided a fixed "5-yr" number by a
+    variable horizon) is fixed. Wired into: the **TCO sort** (now meaningful — was inert with all `tco5yr` null),
+    the **compare table** ("Est. TCO (Nyr)" row, best/worst highlight), the **detail view** (estimated/entered tag +
+    per-category breakdown + assumptions note), and the **Sheet export** (column now reflects the horizon). Labelled
+    **"Est."** everywhere (rates are illustrative placeholders). Tests 173→**211** (engine 14 + adapter 15 + derive
+    integration; existing 173 still green). Typecheck + `npm run build` green. **Live-verified on :5178:** TCO sort
+    reorders 18 cars (cheapest-to-own c11 → priciest c18, the new car); detail shows "Est. TCO (5yr) $31,544
+    estimated" + breakdown (dep $5,106 hand-checked ✓); compare row + best marker; **changing horizon to 8yr live-
+    updated values, labels, and the ranking**; console 0 errors. (Screenshot tool timed out on the wide compare
+    table — a harness hiccup, not an app error; verified via DOM assertions instead.)
 - **Open items (non-blocking):**
   - Re-run the independent `reviewer` subagent when the API recovers (it 529'd twice; PM did the review — see review-findings.md).
   - Offer: create/refresh a **real Google Sheet** in the user's Drive via the connected Drive MCP (needs user OK — outward-facing).

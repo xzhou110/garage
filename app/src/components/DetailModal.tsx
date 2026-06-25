@@ -3,7 +3,8 @@ import { useState } from 'react';
 import type { Car } from '../types';
 import { FEATURES } from '../data/features';
 import { carName, featState, miles, money } from '../lib/format';
-import { milesPerYr, otd, tcoPerMile, tcoPerYear } from '../lib/derive';
+import { effectiveTco, isTcoEstimated, milesPerYr, otd, tcoBreakdown, tcoPerMile, tcoPerYear } from '../lib/derive';
+import { GARAGE_TCO_NOTE, type ByCategory, type CategoryKey } from '../lib/tco';
 import { getFlags } from '../lib/flags';
 import type { Settings } from '../types';
 import { Modal } from './Modal';
@@ -22,6 +23,37 @@ interface Props {
   onMarkSold: (id: string) => void;
   onSetExpert: (id: string, n: number) => void;
   onSetYou: (id: string, n: number) => void;
+}
+
+/** Cost components shown in the estimated-TCO breakdown, in display order. */
+const TCO_CATS: [CategoryKey, string][] = [
+  ['depreciation', 'Depreciation'],
+  ['energy', 'Fuel'],
+  ['insurance', 'Insurance'],
+  ['maintenance', 'Maintenance'],
+  ['repairs', 'Repairs'],
+  ['financingInterest', 'Financing'],
+  ['taxesAndFees', 'Taxes & fees'],
+];
+
+/** Compact list of the estimated TCO's cost components (skips zero/near-zero rows). */
+function TcoBreakdown({ b, years }: { b: ByCategory; years: number }): ReactElement {
+  return (
+    <div style={{ marginTop: 10, paddingTop: 10, borderTop: '1px solid var(--line)' }}>
+      <div style={{ fontSize: 12, color: 'var(--ink-3)', marginBottom: 6 }}>
+        Estimated {years}-yr cost breakdown
+      </div>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: 3 }}>
+        {TCO_CATS.filter(([k]) => (b[k] || 0) >= 1).map(([k, label]) => (
+          <div key={k} style={{ display: 'flex', justifyContent: 'space-between', fontSize: 13 }}>
+            <span style={{ color: 'var(--ink-2)' }}>{label}</span>
+            <span className="num" style={{ color: 'var(--ink)' }}>${Math.round(b[k]).toLocaleString('en-US')}</span>
+          </div>
+        ))}
+      </div>
+      <div style={{ fontSize: 11.5, color: 'var(--ink-3)', marginTop: 9, lineHeight: 1.45 }}>{GARAGE_TCO_NOTE}</div>
+    </div>
+  );
 }
 
 /** Renders a labelled field only when the value is meaningful (mirrors the prototype's field() helper). */
@@ -80,6 +112,9 @@ export function DetailModal({
   const open = !!car;
   const mpy = car ? milesPerYr(car) : null;
   const otdVal = car ? otd(car) : null;
+  const tco = car ? effectiveTco(car, settings) : null;
+  const tcoEstimated = car ? isTcoEstimated(car) : true;
+  const breakdown = car && tcoEstimated ? tcoBreakdown(car, settings) : null;
   const tpy = car ? tcoPerYear(car, settings) : null;
   const tpm = car ? tcoPerMile(car, settings) : null;
   const flags = car ? getFlags(car) : [];
@@ -133,12 +168,22 @@ export function DetailModal({
                 <Field label="Est. out-the-door*">
                   {otdVal != null ? <b className="num">{money(otdVal)}</b> : ''}
                 </Field>
-                <Field label="5-yr TCO">
-                  {car.tco5yr ? money(car.tco5yr) : <span style={{ color: 'var(--ink-3)' }}>not set</span>}
+                <Field label={`Est. TCO (${settings.years}yr)`}>
+                  {tco ? (
+                    <>
+                      <b className="num">{money(tco)}</b>{' '}
+                      <span style={{ color: 'var(--ink-3)', fontWeight: 500, fontSize: 12 }}>
+                        {tcoEstimated ? 'estimated' : 'entered'}
+                      </span>
+                    </>
+                  ) : (
+                    <span style={{ color: 'var(--ink-3)' }}>—</span>
+                  )}
                 </Field>
                 <Field label="TCO / year">{tpy ? money(tpy) : ''}</Field>
                 <Field label="TCO / mile">{tpm ? '$' + tpm : ''}</Field>
               </div>
+              {breakdown && <TcoBreakdown b={breakdown} years={settings.years} />}
             </section>
 
             <section className="det-section">

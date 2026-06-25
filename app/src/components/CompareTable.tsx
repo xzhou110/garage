@@ -3,7 +3,7 @@ import type { ReactElement, ReactNode } from 'react';
 import type { Car, Settings } from '../types';
 import { FEATURES } from '../data/features';
 import { carName, featCount, featState, miles, money } from '../lib/format';
-import { otd, tcoPerMile, tcoPerYear } from '../lib/derive';
+import { effectiveTco, otd, tcoPerMile, tcoPerYear } from '../lib/derive';
 import { getFlags } from '../lib/flags';
 import { assetUrl, STATUS_BADGE } from './helpers';
 import { IconCar, IconClose, IconExt } from './icons';
@@ -98,9 +98,12 @@ function buildRows(settings: Settings): Row[] {
     ['Doc/other fees', (c) => money(c.feesEstimate), { num: (c) => c.feesEstimate || 0, dir: 'min' }],
     ['Out-the-door*', (c) => (otd(c) != null ? money(otd(c)) : '—'), { num: (c) => otd(c), dir: 'min' }],
     [
-      '5-yr TCO',
-      (c) => (c.tco5yr ? money(c.tco5yr) : <span style={{ color: 'var(--ink-3)' }}>—</span>),
-      { num: (c) => c.tco5yr, dir: 'min' },
+      `Est. TCO (${settings.years}yr)`,
+      (c) => {
+        const t = effectiveTco(c, settings);
+        return t ? money(t) : <span style={{ color: 'var(--ink-3)' }}>—</span>;
+      },
+      { num: (c) => effectiveTco(c, settings), dir: 'min', label: 'total cost' },
     ],
     ['TCO / year', (c) => (tcoPerYear(c, settings) ? money(tcoPerYear(c, settings)) : '—'), { num: (c) => tcoPerYear(c, settings), dir: 'min' }],
     ['TCO / mile', (c) => (tcoPerMile(c, settings) ? '$' + tcoPerMile(c, settings) : '—'), { num: (c) => tcoPerMile(c, settings), dir: 'min' }],

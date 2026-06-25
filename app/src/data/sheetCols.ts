@@ -1,14 +1,17 @@
-import type { SheetCol } from '../types';
+import type { SheetCol, Settings } from '../types';
+import { DEFAULT_SETTINGS } from '../types';
 import { FEATURES } from './features';
-import { otd, milesPerYr } from '../lib/derive';
+import { otd, milesPerYr, effectiveTco } from '../lib/derive';
 import { featState } from '../lib/format';
 
 /**
- * Export/spreadsheet column order — ported VERBATIM from the prototype (garage.html:1224).
- * [title, accessor]. First row of any export is these titles; one row per car follows.
- * Includes all 9 features as Yes/No/? plus derived out-the-door and miles/yr.
+ * Export/spreadsheet column order — ported from the prototype (garage.html:1224), now a builder
+ * so the TCO column can reflect the user's ownership horizon. [title, accessor]. First row of any
+ * export is these titles; one row per car follows. Includes all 10 features as Yes/No/? plus
+ * derived out-the-door, miles/yr and the effective (override-or-estimate) TCO.
  */
-export const SHEET_COLS: SheetCol[] = [
+export function buildSheetCols(settings: Settings = DEFAULT_SETTINGS): SheetCol[] {
+  return [
   ['Status', (c) => c.status || ''],
   ['Year', (c) => c.year ?? ''],
   ['Make', (c) => c.make || ''],
@@ -31,7 +34,7 @@ export const SHEET_COLS: SheetCol[] = [
   ['Warranty', (c) => c.warranty || ''],
   ['Days listed', (c) => c.daysOnMarket ?? ''],
   ['Market avg', (c) => c.marketAvg ?? ''],
-  ['5yr TCO', (c) => c.tco5yr ?? ''],
+  [`Est. ${settings.years}yr TCO`, (c) => effectiveTco(c, settings) ?? ''],
   ['Expert rating', (c) => c.expertRating ?? ''],
   ['Your rating', (c) => c.rating ?? ''],
   ...FEATURES.map(([k, , long]): SheetCol => [
@@ -49,4 +52,8 @@ export const SHEET_COLS: SheetCol[] = [
   ['Int color', (c) => c.intColor || ''],
   ['Listing URL', (c) => c.sourceUrl || ''],
   ['Notes', (c) => c.notes || ''],
-];
+  ];
+}
+
+/** Default columns (5yr/12k assumptions). In-app exports rebuild with the user's settings. */
+export const SHEET_COLS: SheetCol[] = buildSheetCols();

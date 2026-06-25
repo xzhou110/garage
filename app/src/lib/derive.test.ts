@@ -1,5 +1,14 @@
 import { describe, it, expect } from 'vitest';
-import { totalFees, otd, milesPerYr, tcoPerYear, tcoPerMile } from './derive';
+import {
+  totalFees,
+  otd,
+  milesPerYr,
+  tcoPerYear,
+  tcoPerMile,
+  estimatedTco,
+  effectiveTco,
+  isTcoEstimated,
+} from './derive';
 import type { Car, Settings } from '../types';
 
 // ---------------------------------------------------------------------------
@@ -155,18 +164,20 @@ describe('milesPerYr', () => {
 // tcoPerYear
 // ---------------------------------------------------------------------------
 describe('tcoPerYear', () => {
-  it('divides tco5yr by years', () => {
+  it('divides a manual TCO override by years', () => {
     expect(tcoPerYear(car({ tco5yr: 30000 }), { miles: 12000, years: 5 })).toBe(6000);
   });
 
-  it('returns null when tco5yr is null', () => {
-    expect(tcoPerYear(car({ tco5yr: null }), S)).toBeNull();
+  it('falls back to the engine estimate when there is no override (null)', () => {
+    const c = car({ tco5yr: null });
+    const expected = Math.round(estimatedTco(c, S)! / S.years);
+    expect(tcoPerYear(c, S)).toBe(expected);
+    expect(tcoPerYear(c, S)!).toBeGreaterThan(0);
   });
 
-  it('returns null when tco5yr is 0 (falsy)', () => {
-    // Implementation: `c.tco5yr && s.years` — tco5yr=0 is falsy → null
-    // This is consistent with the prototype behavior.
-    expect(tcoPerYear(car({ tco5yr: 0 }), S)).toBeNull();
+  it('treats a 0 override as no override (uses the estimate)', () => {
+    const c = car({ tco5yr: 0 });
+    expect(tcoPerYear(c, S)).toBe(Math.round(estimatedTco(c, S)! / S.years));
   });
 
   it('rounds to integer', () => {
@@ -178,8 +189,12 @@ describe('tcoPerYear', () => {
     expect(tcoPerYear(car({ tco5yr: 30003 }), { miles: 12000, years: 5 })).toBe(6001);
   });
 
-  it('different years setting', () => {
+  it('different years setting (override path)', () => {
     expect(tcoPerYear(car({ tco5yr: 30000 }), { miles: 12000, years: 3 })).toBe(10000);
+  });
+
+  it('returns null when there is no price to estimate from and no override', () => {
+    expect(tcoPerYear(car({ tco5yr: null, price: 0 }), S)).toBeNull();
   });
 });
 
@@ -187,17 +202,21 @@ describe('tcoPerYear', () => {
 // tcoPerMile
 // ---------------------------------------------------------------------------
 describe('tcoPerMile', () => {
-  it('tco5yr / (miles * years)', () => {
+  it('override / (miles * years)', () => {
     // 30000 / (12000 * 5) = 0.5
     expect(tcoPerMile(car({ tco5yr: 30000 }), { miles: 12000, years: 5 })).toBe(0.5);
   });
 
-  it('returns null when tco5yr is null', () => {
-    expect(tcoPerMile(car({ tco5yr: null }), S)).toBeNull();
+  it('falls back to the engine estimate when there is no override (null)', () => {
+    const c = car({ tco5yr: null });
+    const expected = +(estimatedTco(c, S)! / (S.miles * S.years)).toFixed(2);
+    expect(tcoPerMile(c, S)).toBe(expected);
+    expect(tcoPerMile(c, S)!).toBeGreaterThan(0);
   });
 
-  it('returns null when tco5yr is 0 (falsy)', () => {
-    expect(tcoPerMile(car({ tco5yr: 0 }), S)).toBeNull();
+  it('treats a 0 override as no override (uses the estimate)', () => {
+    const c = car({ tco5yr: 0 });
+    expect(tcoPerMile(c, S)).toBe(+(estimatedTco(c, S)! / (S.miles * S.years)).toFixed(2));
   });
 
   it('result is rounded to 2 decimal places', () => {
@@ -205,8 +224,57 @@ describe('tcoPerMile', () => {
     expect(tcoPerMile(car({ tco5yr: 10000 }), { miles: 12000, years: 5 })).toBe(0.17);
   });
 
-  it('different settings', () => {
+  it('different settings (override path)', () => {
     // 36000 / (15000 * 3) = 0.8
     expect(tcoPerMile(car({ tco5yr: 36000 }), { miles: 15000, years: 3 })).toBe(0.8);
+  });
+
+  it('returns null when there is no price to estimate from and no override', () => {
+    expect(tcoPerMile(car({ tco5yr: null, price: 0 }), S)).toBeNull();
+  });
+});
+
+// ---------------------------------------------------------------------------
+// estimatedTco / effectiveTco / isTcoEstimated  (engine integration)
+// ---------------------------------------------------------------------------
+describe('estimatedTco', () => {
+  it('computes a positive whole-dollar TCO from the engine for a priced car', () => {
+    const t = estimatedTco(car({ tco5yr: null }), S);
+    expect(t).not.toBeNull();
+    expect(Number.isInteger(t)).toBe(true);
+    expect(t!).toBeGreaterThan(0);
+  });
+
+  it('is null when there is no price', () => {
+    expect(estimatedTco(car({ price: 0 }), S)).toBeNull();
+  });
+
+  it('a longer ownership horizon raises the total cost (more years of fuel/insurance/upkeep)', () => {
+    const c = car({ tco5yr: null });
+    expect(estimatedTco(c, { miles: 12000, years: 8 })!).toBeGreaterThan(estimatedTco(c, { miles: 12000, years: 3 })!);
+  });
+
+  it('more annual miles raises the total cost', () => {
+    const c = car({ tco5yr: null });
+    expect(estimatedTco(c, { miles: 20000, years: 5 })!).toBeGreaterThan(estimatedTco(c, { miles: 8000, years: 5 })!);
+  });
+
+  it('a cheaper, identical car costs less to own (price drives ranking)', () => {
+    const cheap = car({ tco5yr: null, price: 30000 });
+    const dear = car({ tco5yr: null, price: 40000 });
+    expect(estimatedTco(cheap, S)!).toBeLessThan(estimatedTco(dear, S)!);
+  });
+});
+
+describe('effectiveTco / isTcoEstimated', () => {
+  it('uses the manual override verbatim when present', () => {
+    expect(effectiveTco(car({ tco5yr: 42000 }), S)).toBe(42000);
+    expect(isTcoEstimated(car({ tco5yr: 42000 }))).toBe(false);
+  });
+
+  it('uses the estimate when no override, and flags it as estimated', () => {
+    const c = car({ tco5yr: null });
+    expect(effectiveTco(c, S)).toBe(estimatedTco(c, S));
+    expect(isTcoEstimated(c)).toBe(true);
   });
 });

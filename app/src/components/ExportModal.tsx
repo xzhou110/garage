@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import type { ReactElement } from 'react';
-import type { Car } from '../types';
+import type { Car, Settings } from '../types';
 import { sheetMatrix, toCSV, toJSON, toTSV } from '../lib/exportSheet';
 import { Modal } from './Modal';
 import { IconClose, IconCopy, IconDownload, IconExport, IconInfo } from './icons';
@@ -8,6 +8,7 @@ import { IconClose, IconCopy, IconDownload, IconExport, IconInfo } from './icons
 interface Props {
   open: boolean;
   cars: Car[];
+  settings: Settings;
   sheetUrl: string;
   onClose: () => void;
   onToast: (msg: string) => void;
@@ -15,10 +16,10 @@ interface Props {
 
 type Fmt = 'tsv' | 'json';
 
-export function ExportModal({ open, cars, sheetUrl, onClose, onToast }: Props): ReactElement {
+export function ExportModal({ open, cars, settings, sheetUrl, onClose, onToast }: Props): ReactElement {
   const [fmt, setFmt] = useState<Fmt>('tsv');
 
-  const tsv = useMemo(() => toTSV(cars), [cars]);
+  const tsv = useMemo(() => toTSV(cars, settings), [cars, settings]);
   const json = useMemo(() => toJSON(cars), [cars]);
   const preview = fmt === 'tsv' ? tsv : json;
 
@@ -48,7 +49,7 @@ export function ExportModal({ open, cars, sheetUrl, onClose, onToast }: Props): 
         method: 'POST',
         mode: 'no-cors',
         headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-        body: JSON.stringify({ rows: sheetMatrix(cars) }),
+        body: JSON.stringify({ rows: sheetMatrix(cars, settings) }),
       });
       onToast('Sent — open your sheet to confirm. Empty? Re-deploy the script with access = “Anyone”.');
     } catch {
@@ -57,7 +58,7 @@ export function ExportModal({ open, cars, sheetUrl, onClose, onToast }: Props): 
   }
 
   function downloadCsv() {
-    const blob = new Blob([toCSV(cars)], { type: 'text/csv;charset=utf-8' });
+    const blob = new Blob([toCSV(cars, settings)], { type: 'text/csv;charset=utf-8' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;

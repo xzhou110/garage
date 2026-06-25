@@ -40,7 +40,7 @@ export function SettingsModal({ open, settings, onClose, onSave, onToast }: Prop
             Ownership assumptions
           </div>
           <div className="modal-sub">
-            Used to turn 5-yr TCO into a comparable cost-per-mile and cost-per-year.
+            Drive the total-cost-of-ownership estimate that ranks your cars — and its cost-per-year / per-mile.
           </div>
         </div>
         <button className="x" onClick={onClose} aria-label="Close">

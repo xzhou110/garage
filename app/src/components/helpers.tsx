@@ -1,8 +1,8 @@
 // UI-layer helpers: orchestration that COMPOSES the pure lib/* engine (it never reimplements
 // domain logic) plus presentational shared bits (asset URLs, flag icons, status classes).
 import type { ReactElement } from 'react';
-import type { Car, FlagLevel, Status } from '../types';
-import { otd } from '../lib/derive';
+import type { Car, FlagLevel, Settings, Status } from '../types';
+import { effectiveTco, otd } from '../lib/derive';
 import { featCount, featState } from '../lib/format';
 import { IconCheck, IconInfo, IconRisk, IconWarn } from './icons';
 import type { Filters } from '../state/useGarage';
@@ -63,8 +63,9 @@ export function applyFilters(cars: Car[], f: Filters): Car[] {
   });
 }
 
-/** Sort (ported from applySort, garage.html:711). 'added' keeps insertion order. */
-export function applySort(cars: Car[], sort: Filters['sort']): Car[] {
+/** Sort (ported from applySort, garage.html:711). 'added' keeps insertion order.
+ *  `settings` feeds the TCO sort, which ranks by the live effective (override-or-estimate) TCO. */
+export function applySort(cars: Car[], sort: Filters['sort'], settings: Settings): Car[] {
   const arr = [...cars];
   const cmp: Partial<Record<Filters['sort'], (a: Car, b: Car) => number>> = {
     'price-asc': (a, b) => (a.price || 1e12) - (b.price || 1e12),
@@ -73,7 +74,7 @@ export function applySort(cars: Car[], sort: Filters['sort']): Car[] {
     'miles-asc': (a, b) => (a.mileage || 1e12) - (b.mileage || 1e12),
     'year-desc': (a, b) => (b.year || 0) - (a.year || 0),
     'feat-desc': (a, b) => featCount(b) - featCount(a),
-    'tco-asc': (a, b) => (a.tco5yr || 1e12) - (b.tco5yr || 1e12),
+    'tco-asc': (a, b) => (effectiveTco(a, settings) ?? 1e12) - (effectiveTco(b, settings) ?? 1e12),
     'expert-desc': (a, b) => (b.expertRating || 0) - (a.expertRating || 0),
     'you-desc': (a, b) => (b.rating || 0) - (a.rating || 0),
     'dom-desc': (a, b) => (b.daysOnMarket || 0) - (a.daysOnMarket || 0),

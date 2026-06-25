@@ -1,14 +1,16 @@
-import type { Car } from '../types';
-import { SHEET_COLS } from '../data/sheetCols';
+import type { Car, Settings } from '../types';
+import { DEFAULT_SETTINGS } from '../types';
+import { buildSheetCols } from '../data/sheetCols';
 
-/** [titles row, ...one row per car] using SHEET_COLS order (prototype:1242). */
-export function sheetMatrix(cars: Car[]): (string | number)[][] {
-  return [SHEET_COLS.map((col) => col[0]), ...cars.map((c) => SHEET_COLS.map((col) => col[1](c)))];
+/** [titles row, ...one row per car] using the column order, with TCO at the given settings (prototype:1242). */
+export function sheetMatrix(cars: Car[], settings: Settings = DEFAULT_SETTINGS): (string | number)[][] {
+  const cols = buildSheetCols(settings);
+  return [cols.map((col) => col[0]), ...cars.map((c) => cols.map((col) => col[1](c)))];
 }
 
 /** Tab-separated; tabs/newlines inside cells flattened so a paste into A1 stays a clean grid (prototype:1243). */
-export function toTSV(cars: Car[]): string {
-  return sheetMatrix(cars)
+export function toTSV(cars: Car[], settings: Settings = DEFAULT_SETTINGS): string {
+  return sheetMatrix(cars, settings)
     .map((r) => r.map((v) => String(v).replace(/\t/g, ' ').replace(/\r?\n/g, '  ')).join('\t'))
     .join('\n');
 }
@@ -19,8 +21,8 @@ function csvCell(v: string | number): string {
 }
 
 /** RFC-4180-style CSV (prototype:1244). */
-export function toCSV(cars: Car[]): string {
-  return sheetMatrix(cars)
+export function toCSV(cars: Car[], settings: Settings = DEFAULT_SETTINGS): string {
+  return sheetMatrix(cars, settings)
     .map((r) => r.map(csvCell).join(','))
     .join('\n');
 }

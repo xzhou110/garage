@@ -291,7 +291,7 @@ export function CarForm({ car, onClose, onSave }: Props): ReactElement {
           {txt('marketAvg', 'Market avg ($)', 'number', false, true)}
           {txt('transferFee', 'Transfer fee ($)', 'number', false, true)}
           {txt('feesEstimate', 'Doc/other fees ($)', 'number', false, true)}
-          {txt('tco5yr', '5-yr TCO ($)', 'number', false, true, 'I can fill this from an Edmunds lookup')}
+          {txt('tco5yr', 'TCO override ($)', 'number', false, true, 'Leave blank to auto-estimate; enter an Edmunds/AAA figure to override')}
 
           <div className="section-label">History &amp; title</div>
           {txt('ownerCount', 'Prior owners', 'number', false, true)}

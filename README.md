@@ -20,7 +20,7 @@ npm run dev        # → http://localhost:5178
 Other commands (from `app/`):
 - `npm run build` — type-check + production bundle into `app/dist/`
 - `npm run preview` — serve the built bundle
-- `npm test` — run the engine unit tests (161 tests)
+- `npm test` — run the engine unit tests (211 tests)
 
 > Data persists in your browser's localStorage (in-app edits: ratings, status, new cars). The committed
 > seed lives in `app/src/data/cars.ts` and is the source of truth I edit when you send screenshots.
@@ -38,7 +38,9 @@ Other commands (from `app/`):
 3. **Compare** — tick ≥2 cars → the Compare tab shows a side-by-side table that auto-highlights the **best
    (green) / worst (red)** value in each row (cheapest price, lowest out-the-door, most features, etc.).
 4. **Filter / sort** — search, seller/title/accident chips, a filter panel (max price/mileage, min ratings,
-   "must-have" features), and sorts (out-the-door, mileage, TCO, ratings, …).
+   "must-have" features), and sorts (out-the-door, mileage, **total cost (TCO)**, ratings, …).
+   - **Rank by total cost of ownership** — pick **Sort → Total cost (TCO): Low → High** to order the board by
+     estimated lifetime cost over your ownership horizon (see below), not just sticker price.
 5. **Set & change your rating** — click the **You ★** stars on a card (or in the detail view) to rate; it saves
    instantly, persists across reloads, and you can change it any time. **Expert ★** is my rating.
 6. **Mark as sold** — when a car is gone (sold to someone else / off the market), open it and click **Mark as
@@ -88,6 +90,26 @@ dialog (the header **Export** button only opens the dialog).
 **Changed the script code?** (e.g. to add the bold-title/auto-fit formatting above.) Push it live the same way:
 **Deploy → Manage deployments → ✏️ Edit → Version: New version → Deploy** — the `/exec` URL stays the same.
 
+## Total cost of ownership (TCO)
+Sticker price is a poor way to rank near-identical cars — a cheaper car that depreciates faster or burns more
+fuel can cost *more* to own. Garage estimates each car's **5-component lifetime cost** (depreciation + fuel +
+insurance + maintenance/repairs + taxes & registration) over **your** ownership horizon and uses it to rank the board.
+
+- **Choose how long you'll keep it.** Open **Assumptions** and set **Ownership horizon (years)** + **Annual miles**.
+  Everything recomputes live — the TCO sort, the **Est. TCO** row in Compare, and the per-car breakdown in the
+  detail view. A longer horizon spreads the big up-front depreciation hit, so the *best buy can change* with how
+  long you hold the car.
+- **It's an estimate, by design.** Cost rates (depreciation curve, insurance, upkeep) come from segment-typical
+  reference tables (RAV4-anchored depreciation curve), priced on a **cash basis** with **California** averages for
+  fuel/tax/registration/insurance. Differences between cars come from **price, age and mileage** — which is exactly
+  what makes the *ranking* trustworthy even though every absolute figure is an estimate. Cars are labelled **"Est."**.
+- **Override when you have better data.** Enter a number in a car's **TCO override** field (e.g. from an Edmunds True
+  Cost to Own or AAA lookup) and that replaces the estimate for that car everywhere.
+
+The engine is a **vendored copy** of the pure calculator from the sibling project
+[`car-tco-compare`](https://github.com/xzhou110/car-tco-compare), kept dependency-free so Garage stays a static,
+offline-capable app. See `app/src/lib/tco/README.md` for provenance/re-sync and **DECISIONS.md → ADR-009** for why.
+
 ## The 10 tracked features
 Sunroof/moonroof · **panoramic roof** · heated seats · heated steering wheel · power seats · JBL/premium audio ·
 keyless entry + push start · Bluetooth · power liftgate · immobilizer. Tri-state: ✓ has · ✕ confirmed absent ·
@@ -104,6 +126,7 @@ app/src/
   types.ts            data model (Car, Feat, Settings, Flag)
   data/               cars.ts (seed = source of truth) · features.ts · sheetCols.ts
   lib/                flags.ts · derive.ts · format.ts · exportSheet.ts  (PURE, unit-tested)
+  lib/tco/            vendored TCO engine (engine.ts · depreciation.ts · reference.ts) + resolve.ts adapter
   state/useGarage.ts  cars + settings + filters; localStorage autosave + URL-hash share
   components/         Card · Grid · CompareTable · DetailModal · Filters · CarForm · Export/Settings modals
 docs/                 PRD.md · spec-source.md · api-contract.md

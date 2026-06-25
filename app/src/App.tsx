@@ -29,8 +29,8 @@ export default function App() {
   }, []);
 
   const visible = useMemo(
-    () => applySort(applyFilters(g.cars, g.filters), g.filters.sort),
-    [g.cars, g.filters],
+    () => applySort(applyFilters(g.cars, g.filters), g.filters.sort, g.settings),
+    [g.cars, g.filters, g.settings],
   );
   const compareCars = useMemo(
     () => g.cars.filter((c) => g.compareSet.has(c.id)),
@@ -200,6 +200,7 @@ export default function App() {
       <ExportModal
         open={exportOpen}
         cars={g.cars}
+        settings={g.settings}
         sheetUrl={g.settings.sheetUrl ?? ''}
         onClose={() => setExportOpen(false)}
         onToast={showToast}

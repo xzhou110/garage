@@ -32,7 +32,7 @@ const SORT_OPTIONS: { value: SortKey; label: string }[] = [
   { value: 'miles-asc', label: 'Mileage: Low → High' },
   { value: 'year-desc', label: 'Year: Newest first' },
   { value: 'feat-desc', label: 'Key features: Most' },
-  { value: 'tco-asc', label: '5-yr TCO: Low → High' },
+  { value: 'tco-asc', label: 'Total cost (TCO): Low → High' },
   { value: 'expert-desc', label: 'Expert rating: High → Low' },
   { value: 'you-desc', label: 'Your rating: High → Low' },
   { value: 'dom-desc', label: 'Days listed: Most (leverage)' },
