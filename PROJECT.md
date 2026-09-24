@@ -4,7 +4,7 @@ summary: Single-user used-car shortlist & compare — capture listings from scre
 status: live
 live: https://xzhou110.github.io/garage/
 repo: https://github.com/xzhou110/garage
-updated: 2026-08-15
+updated: 2026-09-24
 ---
 
 # Garage — used-car shortlist & compare
