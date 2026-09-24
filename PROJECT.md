@@ -23,7 +23,7 @@ build and the template that [`apartment-shopping`](../apartment-shopping/PROJECT
 |---|---|
 | **Kind** | web app (static SPA, single user) |
 | **Stack** | Vite + React + TypeScript · Vitest (211 tests) · CSS tokens, light/dark · localStorage + URL-hash share |
-| **Local path** | `D:\Useful\AI\claude_projects\garage` (Vite app in `app/`) |
+| **Local path** | `D:\Meaningful\AI\claude_projects\garage` (Vite app in `app/`) |
 | **Run** | `cd app; npm run dev` → http://localhost:5178 · `npm test` · `npm run build` |
 | **Deploy** | push to `main` → `.github/workflows/deploy.yml` → GitHub Pages |
 | **Data / backends** | Seed cars in `app/src/data/cars.ts` (c1–c18) + photos `app/public/img/cN.jpg`; TCO engine **vendored** from car-tco-compare (`app/src/lib/tco/`); Google Sheets sync via the user's Apps Script Web App (URL in localStorage only). **$0/month.** |
